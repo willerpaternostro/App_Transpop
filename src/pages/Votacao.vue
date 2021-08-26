@@ -307,55 +307,62 @@ export default {
     }
   },
   methods:{
-    procurarEvento(){
-      let url = this.votacao['uriEvento']
-      console.log("EVENTOO VIDEO");   
-      console.log(url);
-      if(url){
-        Axios.get(url,config).then((response) =>{
-        console.log("EVENTOO VIDEO");
-        console.log(response.data);
-        this.evento = response.data.dados
-
-        let complementoUrl = response.data.dados.urlRegistro.split('watch?v=')
-        console.log(complementoUrl);
-        this.urlVideo = 'https://www.youtube.com/embed/'+complementoUrl[1]
-        console.log(this.urlVideo);
-        }).catch(erro =>{
-
-            console.log(erro);
-        })
-       }
-    },
-    procurarDetalhesVotacao(url){
-      Axios.get(url,config).then((response) =>{
-        console.log(response);
-        this.votacaoDetalhes = response.data.dados
-        if(this.votacaoDetalhes['ultimaApresentacaoProposicao']['uriProposicaoCitada']){
-          let uri = this.votacaoDetalhes['ultimaApresentacaoProposicao']['uriProposicaoCitada']
-          this.procurarProposicao(uri) 
-          this.votacaoDetalhes['proposicoesAfetadas'].forEach(element => {
-              let proposicao = {
-                label: element.siglaTipo +'/'+ element.numero,
-              }
-            this.proposicoesAfetadas[0].children.push(proposicao)
+    resolve(){
+      Promise.all([
+        this.procurarEventoPromisse(), 
+        this.procurarDetalhesVotacaoPromisse(this.votacao['uri']), 
+        this.procurarVotosPromisse(this.votacao['uri']), 
+        this.procurarOrientacaoPartidoPromisse(this.votacao['uri'])
+      ]).then((response) => {
+          // Evento --> response[0] 
+          this.resolverEvento(response[0])
+          // Detalhes Votação  --> response[1]
+          this.resolverDetalhesVotacao(response[1])
+          //VOTOS --> response[2] 
+          this.resolverVotos(response[2])
+          //Orientação Partido
+          this.resolverOrientacaoPartido(response[3])          
+        }).catch(erro => {   
+                console.log(erro)
           });
-        }
-      }).catch(erro =>{
-          console.log(erro);
-      })
     },
-    procurarProposicao(url){
-      Axios.get(url,config).then((response) =>{
-        console.log(response);
-        this.proposicaoCitada = response.data.dados
-      }).catch(erro =>{
-          console.log(erro);
-      })
+    resolverEvento(response){
+      this.evento = response.data.dados
+      let complementoUrl = response.data.dados.urlRegistro.split('watch?v=')
+      this.urlVideo = 'https://www.youtube.com/embed/'+complementoUrl[1]
     },
-    procurarVotos(url){
+    async procurarEventoPromisse(){
+      let url = this.votacao['uriEvento']
       if(url){
-        Axios.get(url+'/votos',config).then((response) =>{
+        const response = await Axios.get(url,config)
+        return response
+      }
+    },
+    resolverDetalhesVotacao(response){
+      this.votacaoDetalhes = response.data.dados
+      if(this.votacaoDetalhes['ultimaApresentacaoProposicao']['uriProposicaoCitada']){
+        let uri = this.votacaoDetalhes['ultimaApresentacaoProposicao']['uriProposicaoCitada']
+        this.procurarProposicaoPromisse(uri) 
+        this.votacaoDetalhes['proposicoesAfetadas'].forEach(element => {
+            let proposicao = {
+              label: element.siglaTipo +'/'+ element.numero,
+            }
+          this.proposicoesAfetadas[0].children.push(proposicao)
+        });
+        }
+    },
+    async procurarDetalhesVotacaoPromisse(url){
+      const response = await Axios.get(url,config)
+      return response
+    },
+    resolverProposicao(response){
+      this.proposicaoCitada = response.data.dados
+    },
+     async procurarProposicaoPromisse(url){
+      const response = await Axios.get(url,config)
+      return response
+    },
+    resolverVotos(response){
         let todosVotos = response.data.dados
           if(Array.isArray(todosVotos)){
             if(todosVotos.length > 0){
@@ -371,14 +378,14 @@ export default {
               })
             }
           }
-        }).catch(erro =>{
-            console.log(erro);
-        })
+    },
+    async procurarVotosPromisse(url){
+      if(url){
+        const response = await Axios.get(url+'/votos',config)
+        return response
       }
     },
-    procurarOrientacaoPartido(url){
-      if(url){
-        Axios.get(url+'/orientacoes',config).then((response) =>{
+    resolverOrientacaoPartido(response){  
         let todosVotos = response.data.dados
         if(Array.isArray(todosVotos)){
           if(todosVotos.length > 0){
@@ -394,11 +401,12 @@ export default {
             })
           }
         }
-        }).catch(erro =>{
-            console.log(erro);
-        })
+    },
+    async procurarOrientacaoPartidoPromisse(url){
+      if(url){
+        const response = await Axios.get(url+'/orientacoes',config)
+        return response
       }
-    
     }
   },
   watch:{
@@ -408,10 +416,7 @@ export default {
     console.log(this.$route.params);
     if(this.$route.params.votacao){
         this.votacao = this.$route.params.votacao
-        this.procurarEvento()
-        this.procurarDetalhesVotacao(this.votacao['uri'])
-        this.procurarVotos(this.votacao['uri'])
-        this.procurarOrientacaoPartido(this.votacao['uri'])
+        this.resolve(this.votacao)
     }
   },
   mounted(){

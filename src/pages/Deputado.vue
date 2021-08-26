@@ -20,8 +20,7 @@
                 <q-img contain v-if="!deputado.ultimoStatus.urlFoto" style="padding:10px"  height="180px" src="~assets/icone_deputados.png" />
             </div>
             
-            <div class="col-8" style="padding-left:10px">
-                
+            <div class="col-8" style="padding-left:10px">    
                 <!-- Nome Eleitoral -->
                 <div class="row"> 
                     <div class="col-12 text-grey-9 self-center">
@@ -147,7 +146,7 @@
                 style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
             >
             <div >
-                <q-select @input="procurarDespesas" class="bg-white text-positive" outlined v-model="filtroDespesa_ano" :options="anosDespesas" label="Ano" />
+                <q-select @input="procurarDespesasLocal" class="bg-white text-positive" outlined v-model="filtroDespesa_ano" :options="anosDespesas" label="Ano" />
             </div>
             <div class="row bg-white">
                 <div class=" col-12 text-red text-h6 bg-white full-width"><span class="text-grey-9">Total:</span> R$ {{valorDespesaTotal > 0?valorDespesaTotal.toString().split('.')[0]+','+valorDespesaTotal.toString().split('.')[1].slice(0,2):0}} </div>
@@ -234,22 +233,19 @@ export default {
     }
   },
     methods:{
-        resolve(){
-            this.$q.loading.show()
+        resolve(){     
             Promise.all([this.profissao(), this.procurarDespesas(), this.procurarOcupacoes()]).then((response) => {
-                this.$q.loading.hide()
-                /** PROFISSÕES --> response[0] */
+                    // PROFISSÕES --> response[0] 
                     this.profissoes = response[0]['data']['dados']
-                /* DESPESAS  --> response[1]*/
+                    // DESPESAS  --> response[1]
                     this.despesas = response[1]['data']['dados']
                     this.valorDespesaTotal = 0
                     this.despesas.forEach(element => {
                     this.valorDespesaTotal = this.valorDespesaTotal + element.valorDocumento
                     })
-                /*OCUPAÇÕES --> response[2] */
+                    //OCUPAÇÕES --> response[2] 
                     this.ocupacoes = response[2]['data']['dados']
-            }).catch(erro => {
-                this.$q.loading.hide()
+            }).catch(erro => {   
                 console.log(erro);});
         },
         async profissao(){
@@ -263,6 +259,17 @@ export default {
         async procurarOcupacoes(){
             const ocupacoes = await axiosInstance.get("deputados/"+this.deputado.id+"/ocupacoes",config)
             return ocupacoes
+        },
+        procurarDespesasLocal(){ //Precisa arrumar: somar todas as paginações
+            axiosInstance.get("deputados/"+this.deputado.id+"/despesas?itens=100&ano="+this.filtroDespesa_ano,config).then( response =>{
+                    this.despesas = response['data']['dados']
+                    this.valorDespesaTotal = 0
+                    this.despesas.forEach(element => {
+                        this.valorDespesaTotal = this.valorDespesaTotal + element.valorDocumento
+                    })
+            }).catch(erro => {
+                console.log(erro)
+            })
         },
         procurarRedesSociais(){
             if(this.deputado.redeSocial){
