@@ -1,7 +1,7 @@
 {
-  "appId": "br.com.transpop.app",
-  "appName": "TransPop",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www"
+	"appId": "br.com.transpop.app",
+	"appName": "TransPop",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www"
 }

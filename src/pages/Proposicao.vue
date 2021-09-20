@@ -25,7 +25,7 @@
           </div>
           <div class="col-12" style="margin-top:10px"> 
             <span class="text-weight-bold">Autores:</span>
-            <q-badge v-for="(autor,index) in autores" :key="index">
+            <q-badge @click="verAutor(autor)" v-for="(autor,index) in autores" :key="index">
               {{autor['nome'] }} 
             </q-badge>
           </div>
@@ -50,7 +50,7 @@
             {{ultimoRelator['ultimoStatus']['siglaPartido'] + ' - ' + ultimoRelator['ultimoStatus']['siglaUf'] }}
           </div>
           <div class="col-12" v-if="ultimoRelator" style="margin-bottom:40px"> 
-            <span class="text-weight-bold">Email:</span>
+            <span v-if="ultimoRelator['ultimoStatus']['email'] " class="text-weight-bold">Email:</span>
             {{ultimoRelator['ultimoStatus']['email'] }}
           </div>
         </div>
@@ -133,7 +133,7 @@
 </template>
 <script>
 const config = { headers: { 'Content-Type': 'application/json' } };
-import { axiosInstance } from 'boot/axios'
+import { Axios, axiosInstance } from 'boot/axios'
 
 export default {
   data () {
@@ -157,6 +157,7 @@ export default {
   methods:{
     abrirLink(dado){
       window.open(dado,'_blank')
+      console.log("Abriu link")
     },
     votar(decisao){
       if(decisao == 'contra'){
@@ -227,13 +228,33 @@ export default {
         }
        
       })
+    },
+    async verAutor(autor){
+      console.log("FUNÇÃO VER AUTOR");
+      console.log(autor);
+     
+      let url = autor.uri
+      let orgao = url.includes("/orgaos/")
+      console.log(orgao);
+      if(url && !orgao){
+        const deputado = await Axios.get(url,config).then((res) => {
+          console.log("Resultado deputado");
+          this.$router.push({name:"Deputado", params:{deputado:res.data.dados}})
+        })
+      }
+      
     }
   },
   watch:{
 
   },
   beforeMount(){
-    this.proposicao = this.$route.params.proposicao
+    if(this.$route.params.proposicao){
+      this.proposicao = this.$route.params.proposicao
+      this.$q.localStorage.set('ultimaProposicaoVista',this.proposicao)
+    }else{
+      this.proposicao = this.$q.localStorage.getItem("ultimaProposicaoVista")
+    }
   },
   mounted(){
     console.log(this.$route.params);

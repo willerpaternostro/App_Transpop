@@ -101,6 +101,7 @@
          <q-item
           clickable
           v-ripple
+          @click="$router.push({name:'Privacidade'})"
           >
           
           <q-item-section avatar>
@@ -281,11 +282,33 @@ export default {
       if(this.paginaAtual == "ListaProposicoes"){this.$router.push({name:'Home'})}
       if(this.paginaAtual == "ListaVotacoes"){this.$router.push({name:'Home'})}
       if(this.paginaAtual == "ListaDeputados"){this.$router.push({name:'Home'})}
-      if(this.paginaAtual == "Deputado"){this.$router.push({name:'ListaDeputados'})}
-      if(this.paginaAtual == "Proposicao"){this.$router.push({name:'ListaProposicoes'})}
+      if(this.paginaAtual == "Deputado"){
+        if(this.$q.localStorage.getItem('paginaAnterior') == 'Proposicao')
+           this.$router.push({name:'Proposicao'})
+        else
+          this.$router.push({name:'ListaDeputados'})}
+      if(this.paginaAtual == "Proposicao"){
+        let paginaAnterior = this.$q.localStorage.getItem('paginaAnterior');
+        switch(paginaAnterior){
+          case 'Votacao':{
+            this.$router.push({name:'Votacao'});
+            break;
+          }
+          case 'Deputado':{
+            if(this.$q.localStorage.getItem('ultimaVotacaoVista'))
+              this.$router.push({name:'Votacao'});
+            else{
+              this.$router.push({name:'ListaProposicoes'})
+            }
+            break;
+          }
+          default:
+            this.$router.push({name:'ListaProposicoes'})
+        }
+      }
       if(this.paginaAtual == "Votacao"){this.$router.push({name:'ListaVotacoes'})}
-      if(this.paginaAtual == "Home"){console.log("FECHAR APP");}
-      if(this.paginaAtual == "Index"){console.log("FECHAR APP");}
+      if(this.paginaAtual == "Home"){console.log("FECHAR APP")}
+      if(this.paginaAtual == "Index"){console.log("FECHAR APP")}
     },
     //TAB FAVORITOS
     mudarTabFavoritos(dado){

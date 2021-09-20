@@ -191,9 +191,9 @@
 </template>
 <script>
 const PROPOSICOES = [
-    {sigla:'PEC', nome:'Proposta de Emenda Constitucional'},
-    {sigla:'PLP', nome:'Projeto de Lei Complementar'},
     {sigla:'PL', nome:'Projeto de Lei'},
+    {sigla:'PLP', nome:'Projeto de Lei Complementar'},
+    {sigla:'PEC', nome:'Proposta de Emenda Constitucional'},
     {sigla:'', nome:'Ver Todas Proposições'},
 ]
 const DEPUTADOS = [

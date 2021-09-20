@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "47312437842",
+    "project_id": "transpop-9b36c",
+    "storage_bucket": "transpop-9b36c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47312437842:android:ea7f8c0aef9da3133a958b",
+        "android_client_info": {
+          "package_name": "br.com.transpop.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47312437842-vb5kkr8k3foop2a0nco4ihcdev0okmrq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.transpop.app",
+            "certificate_hash": "76f6ded569a617d25c343bd2d1f14804ca14cbb4"
+          }
+        },
+        {
+          "client_id": "47312437842-jvt3tk7vm4j2922qlnqbbearpcnh5ib1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7gLmtiyl1hJHnUs5NERGPMyU0zhWszHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47312437842-jvt3tk7vm4j2922qlnqbbearpcnh5ib1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

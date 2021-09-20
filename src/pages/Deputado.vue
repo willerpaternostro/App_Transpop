@@ -116,7 +116,7 @@
             </div>
 
         </q-expansion-item>
-          <!-- REDES SOCIAIS --> 
+          <!-- PROPOSIÇÕES 
         <q-expansion-item
             default-opened
             expand-separator
@@ -135,7 +135,9 @@
                 </div>
             </div>
         </q-expansion-item>
+        -->
         <!-- DESPESAS -->
+       
         <q-expansion-item
                 expand-separator
                 expanded-icon="fas fa-chevron-down"
@@ -145,27 +147,50 @@
                 class="full-width  text-white text-center text-h6"
                 style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
             >
+            
             <div >
-                <q-select @input="procurarDespesasLocal" class="bg-white text-positive" outlined v-model="filtroDespesa_ano" :options="anosDespesas" label="Ano" />
+                <q-select @input="procurarDespesas" class="bg-white text-positive" outlined v-model="filtroDespesa_ano" :options="anosDespesas" label="Ano" />
             </div>
             <div class="row bg-white">
-                <div class=" col-12 text-red text-h6 bg-white full-width"><span class="text-grey-9">Total:</span> R$ {{valorDespesaTotal > 0?valorDespesaTotal.toString().split('.')[0]+','+valorDespesaTotal.toString().split('.')[1].slice(0,2):0}} </div>
+                <div class=" col-12 text-red text-h6 bg-white full-width" v-show="!loadingDespesas">
+                    <span class="text-grey-9">Total:</span> 
+                    R$ {{valorDespesaTotal > 0?valorDespesaTotal.toString().split('.')[0]+','+valorDespesaTotal.toString().split('.')[1].slice(0,2):0}} </div>
             </div>
-            <q-list class="bg-white text-grey-9 text-justify">
-                <q-item v-for="(despesa,index) in despesas" :key="index">
-                    <q-item-section>
-                        <q-item-label class="text-capitalize text-subtitle1">{{despesa.tipoDespesa.toLowerCase()}}</q-item-label>
-                        <q-item-label caption lines="2">{{despesa.nomeFornecedor}}</q-item-label>
-                    </q-item-section>
+           
+            <q-list class="bg-white text-grey-9 text-justify" style="min-height: 350px;">
+                  <transition
+                        appear
+                        enter-active-class="animated fadeIn"
+                        leave-active-class="animated fadeOut"
+                    >
+                    <q-virtual-scroll
+                        style="max-height: 350px;"
+                        :items="despesas"
+                        separator
+                    >
+                   
+                    <template v-slot="{item,index}">
+                        <q-item  :key="index">
+                            
+                            <q-item-section>
+                                <q-item-label class="text-capitalize text-subtitle1">{{item.tipoDespesa.toLowerCase()}}</q-item-label>
+                                <q-item-label caption lines="2">{{item.nomeFornecedor}}</q-item-label>
+                            </q-item-section>
 
-                    <q-item-section side top>
-                        <q-item-label  class="text-weight-bold " caption>Data:{{despesa.mes+'/'+despesa.ano}}</q-item-label>
-                        <q-item-label  class="text-weight-bold text-subtitle1">R$ {{despesa.valorLiquido}}</q-item-label>
-                        <q-btn flat type="a" target="blank" :href="despesa.urlDocumento" icon="fas fa-file-pdf" color="grey-9" />
-                        <q-item-label  class="text-weight-bold " caption>{{despesa.tipoDocumento}}</q-item-label>
-                    </q-item-section>
-
-                </q-item>
+                            <q-item-section side top>
+                                <q-item-label  class="text-weight-bold " caption>Data:{{item.mes+'/'+item.ano}}</q-item-label>
+                                <q-item-label  class="text-weight-bold text-subtitle1">R$ {{item.valorLiquido}}</q-item-label>
+                                <q-btn flat type="a" target="blank" :href="item.urlDocumento" icon="fas fa-file-pdf" color="grey-9" />
+                                <q-item-label  class="text-weight-bold " caption>{{item.tipoDocumento}}</q-item-label>
+                            </q-item-section>
+                        </q-item>
+                    </template>
+                   
+                    </q-virtual-scroll>
+                 </transition>
+                    <q-inner-loading :showing="loadingDespesas">
+                        <q-spinner-gears size="50px" color="primary" />
+                    </q-inner-loading>
             </q-list>
         </q-expansion-item>
         <!-- Empregos e Ativades -->
@@ -190,31 +215,33 @@
                 </div>
             </div>
         </q-expansion-item>
-          <!-- Publicações político -->
-        <q-expansion-item
-                expand-separator
-                icon=""
-                expanded-icon="fas fa-chevron-down"
-                expand-icon="fas fa-chevron-right"
-                expand-icon-class="text-white"
-                label="Publicações"
-                class="full-width  text-white text-center text-h6"
-                style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
-            >
-            <div class="bg-white text-grey-9 ">
-                <div class="row text-justify" >
-                   <div class="col-12 text-h6">
-                    Não possui nenhuma publicação
+        <!-- Publicações político 
+            <q-expansion-item
+                    expand-separator
+                    icon=""
+                    expanded-icon="fas fa-chevron-down"
+                    expand-icon="fas fa-chevron-right"
+                    expand-icon-class="text-white"
+                    label="Publicações"
+                    class="full-width  text-white text-center text-h6"
+                    style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
+                >
+                <div class="bg-white text-grey-9 ">
+                    <div class="row text-justify" >
+                    <div class="col-12 text-h6">
+                        Não possui nenhuma publicação
+                        </div>
                     </div>
                 </div>
-            </div>
-        </q-expansion-item>
+            </q-expansion-item>
+        -->
     </q-page>
 </template>
 <script>
 const ANOS_DESPESA = [2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009]
 const config = { headers: { 'Content-Type': 'application/json' } };
 import { axiosInstance } from 'boot/axios'
+import {Axios} from 'boot/axios'
 export default {
   data () {
     return {
@@ -226,6 +253,9 @@ export default {
         frentes:null,
         redesSociais:{twitter:'', facebook:'', instagram:'', linkedin:'', youtube:'', youtube:''},
         
+        paginaAtualDespesa:1,
+        paginaFinalDespesa:1,
+        loadingDespesas:false,
         filtroDespesa_ano:'2021',
         anosDespesas:ANOS_DESPESA,
         valorDespesaTotal:0
@@ -234,17 +264,14 @@ export default {
   },
     methods:{
         resolve(){     
-            Promise.all([this.profissao(), this.procurarDespesas(), this.procurarOcupacoes()]).then((response) => {
-                    // PROFISSÕES --> response[0] 
-                    this.profissoes = response[0]['data']['dados']
-                    // DESPESAS  --> response[1]
-                    this.despesas = response[1]['data']['dados']
-                    this.valorDespesaTotal = 0
-                    this.despesas.forEach(element => {
-                    this.valorDespesaTotal = this.valorDespesaTotal + element.valorDocumento
-                    })
-                    //OCUPAÇÕES --> response[2] 
-                    this.ocupacoes = response[2]['data']['dados']
+            Promise.allSettled([this.profissao(), this.procurarDespesas(), this.procurarOcupacoes()]).then((response) => {        
+                // PROFISSÕES --> response[0] 
+                this.profissoes = response[0]['value']['data']['dados']
+                // DESPESAS  --> response[1]
+                //this.despesas = response[1]['value']
+                
+                //OCUPAÇÕES --> response[2] 
+                this.ocupacoes = response[2]['value']['data']['dados']
             }).catch(erro => {   
                 console.log(erro);});
         },
@@ -253,23 +280,61 @@ export default {
             return profissoes
         },
         async procurarDespesas(){
+            this.loadingDespesas = true
             const despesas = await axiosInstance.get("deputados/"+this.deputado.id+"/despesas?itens=100&ano="+this.filtroDespesa_ano,config)
-            return despesas
+            this.despesas = []
+            if(!despesas['data']['dados']){
+                this.valorDespesaTotal = 0
+                this.despesas = []
+                 this.loadingDespesas = false
+                return
+            }
+            if(Array.isArray(despesas['data']['dados'])){ //Quando não tem resultados
+                if(despesas['data']['dados'].length == 0){
+                    this.valorDespesaTotal = 0
+                    this.despesas = []
+                    this.loadingDespesas = false
+                    return
+                }
+            }
+            let linkPrimeiraPagina = despesas.data.links.find( element =>  element.rel.toUpperCase() == "FIRST")["href"]
+            let linkProximaPagina = despesas.data.links.find( element =>  element.rel.toUpperCase() == "NEXT")["href"]
+            let linkPaginaAtual = despesas.data.links.find( element =>  element.rel.toUpperCase() == "SELF")["href"]
+            let linkUltimaPagina = despesas.data.links.find( element =>  element.rel.toUpperCase() == "LAST")["href"]
+           // console.log("LINKS \n"+ linkPrimeiraPagina + "\n" + linkProximaPagina + "\n" + linkUltimaPagina);
+            
+            let paginaAtualLink = linkPaginaAtual.split("&")[1]
+            let qtdPaginaAtual = parseInt(paginaAtualLink.split("pagina=")[1])
+            this.paginaAtualDespesa = qtdPaginaAtual?qtdPaginaAtual:1
+
+            let paginaUltimoLink = linkUltimaPagina.split("&")[1]
+            let qtdPaginas = parseInt(paginaUltimoLink.split("pagina=")[1])
+            this.paginaFinalDespesa = qtdPaginas?qtdPaginas:1;
+            
+            let todasDespesas = despesas["data"]["dados"]
+
+            //ADICIONANDO TODAS AS DESPESAS
+            for( let i = 1; i < qtdPaginas; i++){
+                if(linkProximaPagina){
+                   // console.log("linkProximaPagina:"+linkProximaPagina);
+                    const response = await Axios.get(linkProximaPagina,config)
+                   // console.log("RESPONSE ANTES FOREACH");
+                  //  console.log(response);
+                    response.data.dados.forEach(despesa => {todasDespesas.push(despesa)})
+                }
+            }
+            // CALCULANDO VALOR TOTAL
+            this.valorDespesaTotal = 0
+                todasDespesas.forEach(element => {
+                    this.valorDespesaTotal = this.valorDespesaTotal + element.valorDocumento
+            })
+            this.despesas = todasDespesas
+            this.loadingDespesas = false
         },
+
         async procurarOcupacoes(){
             const ocupacoes = await axiosInstance.get("deputados/"+this.deputado.id+"/ocupacoes",config)
             return ocupacoes
-        },
-        procurarDespesasLocal(){ //Precisa arrumar: somar todas as paginações
-            axiosInstance.get("deputados/"+this.deputado.id+"/despesas?itens=100&ano="+this.filtroDespesa_ano,config).then( response =>{
-                    this.despesas = response['data']['dados']
-                    this.valorDespesaTotal = 0
-                    this.despesas.forEach(element => {
-                        this.valorDespesaTotal = this.valorDespesaTotal + element.valorDocumento
-                    })
-            }).catch(erro => {
-                console.log(erro)
-            })
         },
         procurarRedesSociais(){
             if(this.deputado.redeSocial){
@@ -338,7 +403,7 @@ export default {
   },
   beforeMount(){
         console.log(this.$route.params);
-            if(this.$route.params){
+        if(this.$route.params){
             this.deputado = this.$route.params.deputado
             this.procurarRedesSociais()
         }

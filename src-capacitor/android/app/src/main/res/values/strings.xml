@@ -4,4 +4,6 @@
     <string name="title_activity_main">TransPop</string>
     <string name="package_name">br.com.transpop.app</string>
     <string name="custom_url_scheme">br.com.transpop.app</string>
+    <string name="facebook_app_id">343315434159525</string>
+    <string name="fb_login_protocol_scheme">fb343315434159525</string>
 </resources>

@@ -1,12 +1,12 @@
 <template>
-  <q-page >
+  <q-page v-show="mostrarTela">
       <div v-if="evento"> 
         <q-video
           v-if="evento['urlRegistro']"
          :ratio="16/9"
           :src="urlVideo"
         />
-        </div>
+      </div>
       <!-- PROPOSIÇÃO -->
        <q-expansion-item
             default-opened
@@ -20,8 +20,8 @@
             style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
         >
         <div  class="row bg-white text-grey-9 text-left" style="font-size:16px">
-          <div v-if="votacaoDetalhes['descUltimaAberturaVotacao']" class="col-12 bg-yellow-3 text-center text-weight-bold">
-            {{votacaoDetalhes['descUltimaAberturaVotacao']}}
+          <div v-if="votacaoDetalhes['descUltimaAberturaVotacao'] || votacaoDetalhes['descricao'] " class="col-12 bg-yellow-3 text-center text-weight-bold">
+            {{votacaoDetalhes['descUltimaAberturaVotacao']?votacaoDetalhes['descUltimaAberturaVotacao']:votacaoDetalhes['descricao']}}
           </div>
           <div v-if="proposicaoCitada['urlInteiroTeor']" class="col-12 " style="margin-top:10px;margin-bottom:10px">
           <q-btn 
@@ -44,31 +44,23 @@
           </div>
          
           <div v-if="votacaoDetalhes['ultimaApresentacaoProposicao']" class="col-12 ">
-            <span class="text-weight-bold">Descrição Proposição:</span>  
+            <span v-if="votacaoDetalhes['ultimaApresentacaoProposicao']['descricao']" class="text-weight-bold">Descrição Proposição:</span>  
             {{votacaoDetalhes['ultimaApresentacaoProposicao']['descricao']?votacaoDetalhes['ultimaApresentacaoProposicao']['descricao']:''}}
           </div>
 
-          <div v-if="proposicoesAfetadas"> 
-            <q-tree
-              :nodes="proposicoesAfetadas"
-              node-key="label"
-              accordion
-            >
-              <template v-slot:default-header="prop" >
-                <div class="row items-center">
-                  <div style="font-size:16px" class="text-weight-bold text-grey-9">{{ prop.node.label }}</div>
-                </div>
-              </template>
-
-              <template v-slot:default-body="prop">
-                <div style="font-size:14px" v-if="prop.node.story">
-                 {{prop.node.story }}
-                </div>
-           </template>
-          
-            </q-tree>
+          <div v-if="proposicoesAfetadas" style="margin-top:10px">
+            <div class="text-weight-bold" style="margin-top:10px">Proposições Afetadas</div> 
+             <!-- Enviar para página de Proposicao--> 
+            <q-btn 
+              @click="verProposicaoAfetada(prop['uri'])"
+              v-for="(prop,index) in proposicoesAfetadas"
+              :key="index"
+              color="red"  
+              rounded 
+              :label="prop['siglaTipo'] + '/' + prop['id']"
+              style="margin-top:10px" 
+            />
           </div>
-          
         </div>
         </q-expansion-item>
       <!-- Votos Deputados --> 
@@ -230,7 +222,7 @@
 
               </q-item>  
             </q-list> 
-        </q-expansion-item>
+        </q-expansion-item> 
           <q-expansion-item
             expand-separator
             icon="fas fa-grip-lines"
@@ -246,10 +238,6 @@
                 <q-item-section top avatar>
                   {{partidoAbsteve['siglaPartidoBloco']}}
                 </q-item-section>
-                <q-item-section>
-                  <q-item-label class="">Orientação:{{partidoAbsteve['orientacaoVoto']}}</q-item-label>
-                </q-item-section>
-
               </q-item>  
             </q-list> 
         </q-expansion-item>
@@ -277,23 +265,21 @@
 const config = { headers: { 'Content-Type': 'application/json' } };
 import { axiosInstance } from 'boot/axios'
 import {Axios} from 'boot/axios'
+import { QSpinnerCube } from 'quasar';
 
 export default {
   data () {
     return {
-        nomeDeputadoVotoSim:'',
-        votacao:[],
-        votacaoDetalhes:[],
-        evento:[],
-        urlVideo:[],
-        proposicaoCitada:'',
-        proposicoesAfetadas: [
-        {
-          label: 'Proposições Afetadas',
-          header: 'root',
-          children: []
-        }
-      ],
+      mostrarTela:false,
+      nomeDeputadoVotoSim:'',
+      votacao:[],
+      votacaoDetalhes:[],
+
+      evento:[],
+      urlVideo:[],
+      proposicaoCitada:'',
+      proposicoesAfetadas: [],
+
       deputadosFavoraveis:[],
       deputadosContrarios:[],
       deputadosAbstencao:[],
@@ -308,28 +294,46 @@ export default {
   },
   methods:{
     resolve(){
-      Promise.all([
+      this.$q.loading.show({
+        backgroundColor:"dark",
+        spinnerSize:'80px',
+        spinner:QSpinnerCube,
+        message:"Carregando ..."
+      })
+      Promise.allSettled([
         this.procurarEventoPromisse(), 
         this.procurarDetalhesVotacaoPromisse(this.votacao['uri']), 
         this.procurarVotosPromisse(this.votacao['uri']), 
         this.procurarOrientacaoPartidoPromisse(this.votacao['uri'])
       ]).then((response) => {
+          console.log(response);
+          this.mostrarTela = true
+          this.$q.loading.hide()
           // Evento --> response[0] 
-          this.resolverEvento(response[0])
+          if(response[0]['value'])
+            this.resolverEvento(response[0]['value'])
           // Detalhes Votação  --> response[1]
-          this.resolverDetalhesVotacao(response[1])
+          if(response[1]['value'])
+            this.resolverDetalhesVotacao(response[1]['value'])
           //VOTOS --> response[2] 
-          this.resolverVotos(response[2])
+          if(response[2]['value']['value'])
+            this.resolverVotos(response[2]['value'])
           //Orientação Partido
-          this.resolverOrientacaoPartido(response[3])          
+          if(response[3]['value'])
+          this.resolverOrientacaoPartido(response[3]['value'])          
         }).catch(erro => {   
-                console.log(erro)
+            this.mostrarTela = true
+            this.$q.loading.hide()
+            console.log(erro)
           });
     },
     resolverEvento(response){
-      this.evento = response.data.dados
-      let complementoUrl = response.data.dados.urlRegistro.split('watch?v=')
-      this.urlVideo = 'https://www.youtube.com/embed/'+complementoUrl[1]
+      if(response.data.dados.urlRegistro){
+         this.evento = response.data.dados
+        let complementoUrl = response.data.dados.urlRegistro.split('watch?v=')
+        this.urlVideo = 'https://www.youtube.com/embed/'+complementoUrl[1]
+      }
+     
     },
     async procurarEventoPromisse(){
       let url = this.votacao['uriEvento']
@@ -340,16 +344,14 @@ export default {
     },
     resolverDetalhesVotacao(response){
       this.votacaoDetalhes = response.data.dados
+      console.log("DETALHES VOTAçÃO");
+      console.log(this.votacaoDetalhes);
       if(this.votacaoDetalhes['ultimaApresentacaoProposicao']['uriProposicaoCitada']){
         let uri = this.votacaoDetalhes['ultimaApresentacaoProposicao']['uriProposicaoCitada']
         this.procurarProposicaoPromisse(uri) 
-        this.votacaoDetalhes['proposicoesAfetadas'].forEach(element => {
-            let proposicao = {
-              label: element.siglaTipo +'/'+ element.numero,
-            }
-          this.proposicoesAfetadas[0].children.push(proposicao)
-        });
-        }
+        this.proposicoesAfetadas = this.votacaoDetalhes['proposicoesAfetadas']
+        
+      }
     },
     async procurarDetalhesVotacaoPromisse(url){
       const response = await Axios.get(url,config)
@@ -358,7 +360,7 @@ export default {
     resolverProposicao(response){
       this.proposicaoCitada = response.data.dados
     },
-     async procurarProposicaoPromisse(url){
+    async procurarProposicaoPromisse(url){
       const response = await Axios.get(url,config)
       return response
     },
@@ -407,6 +409,15 @@ export default {
         const response = await Axios.get(url+'/orientacoes',config)
         return response
       }
+    },
+    async verProposicaoAfetada(url){
+      const proposicao = await Axios.get(url,config).then((res) =>{
+        console.log("ver proposicao");
+        console.log(res);
+        this.$router.push({name:'Proposicao', params:{proposicao:res.data.dados}})
+      }).catch((erro)=>{
+        console.log(erro);
+      })
     }
   },
   watch:{
@@ -416,11 +427,15 @@ export default {
     console.log(this.$route.params);
     if(this.$route.params.votacao){
         this.votacao = this.$route.params.votacao
+        this.$q.localStorage.set('ultimaVotacaoVista',this.votacao)
         this.resolve(this.votacao)
+    }else{
+      this.votacao = this.$q.localStorage.getItem('ultimaVotacaoVista')
+      this.resolve(this.votacao)
     }
   },
   mounted(){
-    
+  
   }
    
 }

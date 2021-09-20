@@ -102,17 +102,15 @@ export default {
         this.iconeTresApresentacaoApp =false;
         return
       }
-        
       if(this.slide == 'slide2'){
         this.slide = 'slide3'
         this.iconeDoisApresentacaoApp = true;
         this.iconeTresApresentacaoApp = true;
         return
       }
-      
       if(this.slide == 'slide3'){
         this.$q.localStorage.set('primeiraVezApp',true)
-        this.$router.push({name:'Home'})
+        this.$router.push({name:'EscolhaCadastro'})
       }
     },
   },
@@ -137,12 +135,16 @@ export default {
     // Mexe apenas no localStorage.
     if(!this.$q.localStorage.getItem('primeiraVezApp')){ // Inicia variáveis do localStorage
       this.$q.localStorage.set('primeiraVezApp',false)
+      this.$q.localStorage.set('TelaEscolhaCadastro',false)
       this.$q.localStorage.set('deputadosFavoritos',[])
       this.$q.localStorage.set('ID_deputadosFavoritos',[])
       this.$q.localStorage.set('proposicoesFavoritos',[])
       this.$q.localStorage.set('ID_proposicoesFavoritos',[])
     }else{
-      this.$router.push({name:'Home'})
+        if(!this.$q.localStorage.getItem('TelaEscolhaCadastro'))
+          this.$router.push({name:'EscolhaCadastro'})
+        else
+          this.$router.push({name:'Home'})
     }
   },
   created(){

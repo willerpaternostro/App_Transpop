@@ -5,6 +5,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue'), name:'Index' },
+      { path: 'escolha-cadastro', component: () => import('src/pages/EscolhaCadastro.vue'), name:'EscolhaCadastro' },
       { path: 'home', component: () => import('src/pages/Home.vue'), name:'Home' },
       { path: 'timeline', component: () => import('src/pages/TimeLine.vue'), name:'TimeLine' },
       
@@ -23,6 +24,9 @@ const routes = [
       { path: 'favoritos-candidatos', component: () => import('src/pages/favoritos/FavoritosCandidatos.vue'), name:'FavoritosCandidatos' },
       { path: 'favoritos-proposicoes', component: () => import('src/pages/favoritos/FavoritosProposicoes.vue'), name:'FavoritosProposicoes' },
       { path: 'favoritos-votacoes', component: () => import('src/pages/favoritos/FavoritosVotacoes.vue'), name:'FavoritosVotacoes' },
+      //Privacidade
+      { path: 'privacidade', component: () => import('src/pages/Privacidade.vue'), name:'Privacidade' }
+     
     ]
   },
 
