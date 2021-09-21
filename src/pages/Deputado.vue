@@ -6,7 +6,7 @@
               <span v-if="!deputado.ultimoStatus.data" class="text-caption">Não informado </span>
                 </div>
                <div class="col-6 row justify-end ">
-                <q-btn flat round color="grey-9" icon="fas fa-share-alt" />
+            <!-- <q-btn flat round color="grey-9" icon="fas fa-share-alt" /> -->
                 <q-btn flat round color="red" icon="far fa-heart" />
             </div>
         

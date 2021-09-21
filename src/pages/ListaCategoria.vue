@@ -4,6 +4,7 @@
             <q-input 
                 class="col-12" 
                 bg-color="yellow-1" 
+                @input="filtrarCategoria"
                 filled 
                 color="primary" 
                 bottom-slots 
@@ -11,40 +12,38 @@
                 label="Pesquisar categoria" 
             >
                 <template v-slot:prepend>
-                    <q-icon color="amber" name="fas fa-search" />
+                    <q-icon  color="amber" name="fas fa-search" />
                 </template>
             </q-input>
         </div>
-         <!-- ANTERIOR
-         <div class="row "  >
+       
+        <div class="row justify-center"  v-show="itemsFiltro.length == 0">
             <div 
+                @click="redirecionar(categoria)"
                 v-for="(categoria,index) in items" :key="index"
-                class="col-xs-6 col-sm-4 row" 
+                class="col-xs-6 col-sm-4  row justify-center items-end  text-white" 
                 style="padding:4px"
             >
-                <div class="col-xs-4  text-center " style="" > 
-                     <q-btn  color="positive" :icon="categoria.icone" />
+                <div style="border:2px solid green;height:140px;border-radius:10px;" class="col-12 row">
+                    <q-icon class="col-12 " color="positive" :name="categoria.icone"  style="font-size: 50px; " />
+                    <span style="line-height: normal;padding:0px 2px 10px 2px ; " :class="categoria.nome.length > 17?'text-subtitle1 text-positive text-center text-weight-bold ':'text-h6 col-12 text-center text-positive'">{{categoria.nome}}</span>
                 </div>
-                <span style="font-size:16px;line-height: normal;" class="self-end col-xs-8 text-center text-positive">
-                    {{categoria.nome}}
-                </span>
             </div>
         </div>
-        -->
-       
-        <div class="row justify-center"  >
-        <div 
-            @click="redirecionar(categoria)"
-            v-for="(categoria,index) in items" :key="index"
-            class="col-xs-6 col-sm-4  row justify-center items-end  text-white" 
-            style="padding:4px"
-        >
-        <div style="border:2px solid green;height:140px;border-radius:10px;" class="col-12 row">
-            <q-icon class="col-12 " color="positive" :name="categoria.icone"  style="font-size: 50px; " />
-            <span style="line-height: normal;padding:0px 2px 10px 2px ; " :class="categoria.nome.length > 17?'text-subtitle1 text-positive text-center text-weight-bold ':'text-h6 col-12 text-center text-positive'">{{categoria.nome}}</span>
+         <div class="row justify-center"  v-show="pesquisarCategoria && itemsFiltro.length > 0">
+            <div 
+                @click="redirecionar(categoria)"
+                v-for="(categoria,index) in itemsFiltro" :key="index+'filtro'"
+                class="col-xs-6 col-sm-4  row justify-center items-end  text-white" 
+                style="padding:4px"
+            >
+                <div style="border:2px solid green;height:140px;border-radius:10px;" class="col-12 row">
+                    <q-icon class="col-12 " color="positive" :name="categoria.icone"  style="font-size: 50px; " />
+                    <span style="line-height: normal;padding:0px 2px 10px 2px ; " :class="categoria.nome.length > 17?'text-subtitle1 text-positive text-center text-weight-bold ':'text-h6 col-12 text-center text-positive'">{{categoria.nome}}</span>
+                </div>
+            </div>
         </div>
-        </div>
-        </div>
+
         
     </q-page>
 </template>
@@ -90,6 +89,7 @@ export default {
   data () {
     return {
      items:CATEGORIAS,
+     itemsFiltro:[],
      parametros:"",
      pesquisarCategoria:''
     }
@@ -101,8 +101,21 @@ export default {
             let filtroB = categoria.cod
             let consulta = "?siglaTipo="+filtroA+"&codTema="+filtroB+"&tramitacaoSenado=false"
             this.$router.push({name:this.$route.params.proximaPagina, params:{filtros:{filtroA:filtroA, filtroB:filtroB},consulta:consulta}})
+        } 
+    },
+    filtrarCategoria(){
+        if(!this.pesquisarCategoria){
+            console.log('Nada');
+            this.itemsFiltro = []
+            return
         }
-   
+        var elementosFiltrados =  this.items.filter(elemento => { 
+            if(elemento.nome.toUpperCase().includes(this.pesquisarCategoria.toUpperCase()))
+             return elemento
+            else
+             return false
+        })
+        this.itemsFiltro = elementosFiltrados
         
     }
   },
@@ -111,7 +124,7 @@ export default {
   },
   mounted(){
       if(this.$route.params){
-          console.log(this.$route.params);
+          //console.log(this.$route.params);
           this.parametros = this.$route.params
       }
   }
