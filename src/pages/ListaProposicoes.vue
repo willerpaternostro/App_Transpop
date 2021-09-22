@@ -10,13 +10,13 @@
        <div class="bg-grey-2">
         <br> 
           <q-input outlined v-model="filtro_autor" label="Autor da proposição" /><br>
-          <q-input outlined v-model="filtro_ano" label="Ano de criação" /><br>
+          <q-input outlined v-model="filtro_ano" mask="####" label="Ano de criação" /><br>
     
           <q-select outlined v-model="filtro_siglaTipo" :options="options_siglaTipo" label="Tipo da proposição" /><br>
           <q-select outlined v-model="filtro_codTema" :options="options_categorias" label="Categoria" /><br>
       
           <q-select outlined v-model="filtro_itens" :options="options_itens" label="itens"  /><br>
-            <div class="row justify-end">
+            <div class="row justify-end" style="padding-bottom:16px">
               <q-btn @click="pesquisaComFiltro" color="dark" label="Pesquisar" no-caps />
             </div>    
        </div>
@@ -37,6 +37,7 @@
           <div class="row justify-end"><q-btn color="primary" rounded no-caps label="Ver detalhes" @click="verDetalhes(proposicao)"  text-color="white" /> </div> 
       </div>
     </div>
+    <div class="text-black text-h6 text-grey-7" v-if="msgSemResultado">Nenhum resultado encontrado</div>
   </q-page>
 </template>
 <script>
@@ -130,6 +131,8 @@ export default {
       consultaInicial:'', //Quando vem de ListaCategorias
       proposicoes:[],
       proposicoesDetalhadas:[],
+
+      msgSemResultado:false,
      
     //FILTROS PESQUISA AVANÇADA
       filtro_autor:'',
@@ -185,10 +188,10 @@ export default {
         let resultado = response.data.dados
         this.proposicoes = resultado
         this.proposicoesDetalhadas = []
-     
-
+      
         if(Array.isArray(resultado)){
           if(resultado.length > 0){
+            this.msgSemResultado = false
             resultado.forEach(element => {
               if(element.uri){ 
                 Axios.get(element.uri,config).then((response) =>{
@@ -200,10 +203,13 @@ export default {
                 })
               }
             })
+          }else{
+            this.msgSemResultado = true
           }
         }
         }).catch((erro)=>{
           console.log(erro)
+          this.msgSemResultado = false
         })
     },
     verDetalhes(proposicao){
@@ -254,7 +260,7 @@ export default {
   },
   watch:{
     proposicoesDetalhadas:function(val){
-          console.log(val);          
+          console.log(Array.isArray(val));          
           this.coracoesFavoritos=[]
           this.verificarCoracao()
     }

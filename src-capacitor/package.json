@@ -5,9 +5,11 @@
   "author": "willerpaternostro <willergmpaternostro@gmail.com>",
   "private": true,
   "dependencies": {
+    "@capacitor-community/admob": "^3.2.0",
     "@capacitor-community/facebook-login": "^3.1.1",
     "@capacitor/android": "^3.2.2",
-    "@capacitor/core": "^3.2.2"
+    "@capacitor/core": "^3.2.2",
+    "@capacitor/device": "^1.0.3"
   },
   "devDependencies": {
     "@capacitor/cli": "^3.2.2"

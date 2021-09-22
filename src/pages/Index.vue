@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import { Device } from '@capacitor/device';
+import { AdMob} from '@capacitor-community/admob';
 
 const atributosPagina = {
   backgroundColorTela:'',
@@ -90,7 +92,10 @@ export default {
       slide: 'slide1',
       iconeDoisApresentacaoApp:false,
       iconeTresApresentacaoApp:false,
-      corIconesApresentacaoApp:'positive'
+      corIconesApresentacaoApp:'positive',
+
+      uuid:null,
+      dispositivo:null
     }
   },
   methods:{
@@ -113,6 +118,33 @@ export default {
         this.$router.push({name:'EscolhaCadastro'})
       }
     },
+    async iniciarDispositivo(){
+        const info = await Device.getInfo();
+        const uuid = await Device.getId();
+        this.dispositivo = info;
+        this.uuid = uuid;
+        this.$q.localStorage.set("informacoesDispositivo",info)
+        this.$q.localStorage.set("uuid",uuid)
+
+        console.log(">>> Info <<<< ");
+        console.log(info);
+        console.log(">>>>> UUID <<<<");
+        console.log(uuid);
+
+      if(this.dispositivo.platform != 'web')
+        this.inicializarAdmob()
+     
+    },
+    async inicializarAdmob(){
+      console.log("INICIALIZANDO ADMOB");
+        AdMob.initialize({
+          //requestTrackingAuthorization: true,
+          testingDevices: [this.uuid], // Dispositivo de teste do Admob
+          initializeForTesting: true,
+        });
+    }
+
+
   },
   watch:{
     slide:function(valor){
@@ -152,13 +184,12 @@ export default {
  
   },
   beforeMount(){
-  
+  this.iniciarDispositivo()
    
   },
   mounted(){
-    console.log(this.$q.screen)
+    //console.log(this.$q.screen)
     this.alturaTela = this.$q.screen.height
-  
   }
 }
 </script>

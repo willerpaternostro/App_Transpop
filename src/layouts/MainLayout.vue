@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import { AdMob, BannerAdOptions, BannerAdSize, BannerAdPosition, BannerAdPluginEvents, AdMobBannerSize } from '@capacitor-community/admob';
 
 export default {
   name: 'MainLayout',
@@ -206,7 +207,9 @@ export default {
     }
   },
   computed:{
- 
+    admobVisivel(){
+      return this.$store.state.globais.admobVisivel
+    }
   },
   methods:{
     // INICIALIZAÇÃO DO LAYOUT
@@ -321,6 +324,66 @@ export default {
     alterarDialogInformativoVotacao(dado){
       return this.$store.commit('dadosAbertos/alterarDialogInformativoVotacao',dado)
     },
+
+  //ADMOB
+    fecharBannerAdmob(){
+      console.log("FECHAR ADMOB");
+      console.log(this.admobVisivel);
+      if(this.$q.localStorage.getItem('informacoesDispositivo').platform != 'web' && this.admobVisivel){
+        AdMob.removeBanner()
+        console.log("ENTROU NO THENN FECHAR ADMOB");
+        this.mudarAdmobVisivel(false)
+      }  
+      const ctx = this
+      setTimeout(function(){ // Estava abrindo antes de remover banner
+        ctx.mostrarPropagandaAdmob()
+      },3000) 
+    },
+    mostrarPropagandaAdmob(){
+      console.log("Função mostrarPropagandaAdmob");
+      console.log(this.admobVisivel);
+      if(this.$q.localStorage.getItem('informacoesDispositivo').platform != 'web' && !this.admobVisivel){
+        if( this.paginaAtual == "ListaDeputados" || this.paginaAtual == "ListaProposicoes" || this.paginaAtual == "ListaVotacoes"||
+            this.paginaAtual == "Proposicao" || this.paginaAtual == "Votacao" || this.paginaAtual == "TimeLine"|| this.paginaAtual == "Deputado"
+        ){
+          console.log(">>>> MOSTRAR ADMOB <<<<<<<< ");
+          const options = {
+            adId: 'ca-app-pub-9812607765010869/7032728588',
+            adSize: BannerAdSize.BANNER,
+            position: BannerAdPosition.BOTTOM_CENTER,
+            margin: 0,
+            isTesting: true
+            // npa: true
+          }
+           AdMob.showBanner(options)
+            console.log("ENTROU MOSTRAR PROPAGANDA");
+            this.mudarAdmobVisivel(true)
+          
+        }
+      }
+    },
+    mudarAdmobVisivel(dado = false){
+      return this.$store.commit('globais/mudarAdmobVisivel',dado)
+    },
+    chamarListenersAdmob(){
+      AdMob.addListener(BannerAdPluginEvents.Loaded, () => {
+      console.log(">>>>>>>>>>>>>>CARREGOU BannerAdPluginEvents<<<<<<<<<<<<<<");
+      this.mudarAdmobVisivel(true)
+      });
+      AdMob.addListener(BannerAdPluginEvents.Closed, () => {
+        console.log(">>>>>>>>>>>>>>Closed BannerAdPluginEvents<<<<<<<<<<<<<<");
+        this.mudarAdmobVisivel(false)
+      });
+      AdMob.addListener(BannerAdPluginEvents.FailedToLoad, (info) => {
+        console.log(">>>>>>>>>>>>>>FailedToLoad BannerAdPluginEvents<<<<<<<<<<<<<<");
+        console.log(info);
+      });
+      AdMob.addListener(BannerAdPluginEvents.SizeChanged, (size) => {
+        // Subscribe Change Banner Size
+        console.log(">>> CARREGOU SIZEEE");
+        console.log(size);
+      });
+    }
   },
   watch:{
     $route: function(paginaAtual, paginaAnterior){
@@ -328,9 +391,15 @@ export default {
       this.paginaAnterior = paginaAnterior.name;
       this.$q.localStorage.set('paginaAtual',this.paginaAtual)
       this.$q.localStorage.set('paginaAnterior',this.paginaAnterior)
-      console.log(this.paginaAtual);
+    
       this.inicializacaoPagina();
+      this.fecharBannerAdmob()
+      
     }
+  },
+  mounted(){
+    
+
   }
 }
 </script>

@@ -253,7 +253,7 @@
             expand-icon-class="text-white"
             label="Votação Popular"
             class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
+            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px;margin-bottom:60px"
         >
         <div class="bg-white text-grey-9">
           

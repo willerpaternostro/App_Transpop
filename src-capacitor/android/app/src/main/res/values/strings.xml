@@ -6,4 +6,5 @@
     <string name="custom_url_scheme">br.com.transpop.app</string>
     <string name="facebook_app_id">343315434159525</string>
     <string name="fb_login_protocol_scheme">fb343315434159525</string>
+    <string name="admob_app_id" >ca-app-pub-9812607765010869~6050803498</string>
 </resources>

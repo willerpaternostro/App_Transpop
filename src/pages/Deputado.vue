@@ -202,7 +202,7 @@
                 expand-icon-class="text-white"
                 label="Empregos Anteriores"
                 class="full-width  text-white text-center text-h6"
-                style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
+                style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px;margin-bottom:60px"
             >
             <div class="bg-white text-grey-9 " v-if="ocupacoes">
                 <div class="row text-justify" v-for="(profissaoAnterior,index) in ocupacoes" :key="index">
