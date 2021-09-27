@@ -95,8 +95,8 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             label="Redes sociais"
-            class="full-width  text-white text-center text-h6"
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
+            class="full-width  text-white text-center text-h6 bg-gradient"
+            style=" margin-top:15px"
         >
             <div class="row bg-white">
                 <div class="col-12 text-grey-9 ">
@@ -126,7 +126,7 @@
             expand-icon-class="text-white"
             label="Proposições"
             class="full-width  text-white text-center text-h6"
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
+            style=" margin-top:15px"
         >
             <div class="row bg-white">
                 <div class="col-12 text-grey-9 ">
@@ -144,8 +144,8 @@
                 expand-icon="fas fa-chevron-right"
                 expand-icon-class="text-white"
                 label="Despesas"
-                class="full-width  text-white text-center text-h6"
-                style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
+                class="full-width  text-white text-center text-h6 bg-gradient"
+                style=" margin-top:15px"
             >
             
             <div >
@@ -201,8 +201,8 @@
                 expand-icon="fas fa-chevron-right"
                 expand-icon-class="text-white"
                 label="Empregos Anteriores"
-                class="full-width  text-white text-center text-h6"
-                style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px;margin-bottom:60px"
+                class="full-width  text-white text-center text-h6 bg-gradient"
+                style=" margin-top:15px;margin-bottom:60px"
             >
             <div class="bg-white text-grey-9 " v-if="ocupacoes">
                 <div class="row text-justify" v-for="(profissaoAnterior,index) in ocupacoes" :key="index">
@@ -224,7 +224,7 @@
                     expand-icon-class="text-white"
                     label="Publicações"
                     class="full-width  text-white text-center text-h6"
-                    style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px"
+                    style=" margin-top:15px"
                 >
                 <div class="bg-white text-grey-9 ">
                     <div class="row text-justify" >

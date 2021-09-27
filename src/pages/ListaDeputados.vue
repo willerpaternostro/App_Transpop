@@ -1,7 +1,7 @@
 <template>
     <q-page >
         <q-expansion-item
-         style="margin-bottom:20px"
+         style="margin-bottom:20px;"
           expand-separator
           expand-icon="fas fa-filter"
           label="Clique aqui para Pesquisa avançada"

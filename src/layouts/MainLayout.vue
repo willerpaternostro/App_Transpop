@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf"  >
   <!-- HEADER --> 
-    <q-header v-if="mostrarHeader" style=" background-image: linear-gradient(to bottom right, green,yellow ); ">
+    <q-header v-if="mostrarHeader" style="background-image: linear-gradient(to bottom right, #28B977,#def172 );">
       <q-toolbar>
         <q-btn
           @click="acaoBotaoEsquerdoHeader"
@@ -12,11 +12,9 @@
           round
           aria-label="Menu"
         />
-
-        <q-toolbar-title>
+        <q-toolbar-title >
           {{tituloHeader}}
         </q-toolbar-title>
-
         <div>
           <q-btn
             @click="acaoBotaoDireitoHeader"
@@ -218,6 +216,30 @@ export default {
         this.mostrarHeader = false;
         this.mostrarFooter = false;
       }
+      if(this.paginaAtual == "Cadastro" ){
+        this.mostrarHeader = true;
+        this.mostrarFooter = false;
+        this.inicializarHeader({
+            mostrarHeader:true,
+            mostrarBotaoDireitoHeader:true,
+            mostrarBotaoEsquerdoHeader:true,
+            iconeBotaoDireitoHeader:'fas fa-info',
+            iconeBotaoEsquerdoHeader:'fas fa-arrow-left',
+            tituloHeader:'Cadastro',
+        })
+      }
+       if(this.paginaAtual == "EscolhaCadastro"){
+         this.mostrarHeader = true;
+        this.mostrarFooter = false;
+        this.inicializarHeader({
+            mostrarHeader:true,
+            mostrarBotaoDireitoHeader:true,
+            mostrarBotaoEsquerdoHeader:false,
+            iconeBotaoDireitoHeader:'fas fa-info',
+            iconeBotaoEsquerdoHeader:'fas fa-arrow-left',
+            tituloHeader:'Transpop',
+        })
+      }
       if(this.paginaAtual == "Home"){
         this.mostrarFooter = true;
         this.inicializarHeader({
@@ -281,6 +303,7 @@ export default {
       this.mostrarDrawer = !this.mostrarDrawer
     },
     backButton(){
+      if(this.paginaAtual == "Cadastro"){this.$router.push({name:'EscolhaCadastro'})}
       if(this.paginaAtual == "ListaCategoria"){this.$router.push({name:'Home'})}
       if(this.paginaAtual == "ListaProposicoes"){this.$router.push({name:'Home'})}
       if(this.paginaAtual == "ListaVotacoes"){this.$router.push({name:'Home'})}
@@ -407,4 +430,5 @@ export default {
 .q-tab {
   padding: 0px 4px !important;
 }
+
 </style>

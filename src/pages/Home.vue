@@ -12,8 +12,7 @@
                 expand-icon="fas fa-chevron-right"
                 expand-icon-class="text-white"
                 label=" Votações Câmara Federal"
-                class="full-width  text-white text-center text-h6"
-                style="  background-image: linear-gradient(to bottom right, green,yellow );"
+                class="full-width  text-white text-center text-h6 bg-gradient"
             >
             <q-list class="col-12 text-positive bg-white text-subtitle1">
                 <q-item @click="clickVotacao(votacao)" v-for="(votacao,index) in statusProposicoes" :key="index" clickable v-ripple>
@@ -44,8 +43,7 @@
                 expand-icon="fas fa-chevron-right"
                 expand-icon-class="text-white"
                 label="Proposições"
-                class="full-width text-white text-center text-h6"
-                style=" background-image: linear-gradient(to bottom right, green,yellow );"
+                class="full-width text-white text-center text-h6 bg-gradient"
             >
             <q-list class="col-12 text-positive bg-white text-subtitle1">
                 <q-item v-for="proposicao in proposicoes" :key="proposicao.sigla" clickable v-ripple @click="clickProposicao(proposicao)">
@@ -77,8 +75,7 @@
                 expand-icon="fas fa-chevron-right"
                 expand-icon-class="text-white"
                 label="Deputados"
-                class="full-width  text-white text-center text-h6"
-                style=" background-image: linear-gradient(to bottom right, green,yellow );"
+                class="full-width  text-white text-center text-h6 bg-gradient"
             >
             <q-list class="col-12 text-positive bg-white text-subtitle1">
                 <q-item @click="clickDeputados(deputado)" v-for="deputado in deputados" :key="deputado.atributo" clickable v-ripple>

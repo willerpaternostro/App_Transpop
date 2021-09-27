@@ -24,7 +24,7 @@
                 class="col-xs-6 col-sm-4  row justify-center items-end  text-white" 
                 style="padding:4px"
             >
-                <div style="border:2px solid green;height:140px;border-radius:10px;" class="col-12 row">
+                <div style="border:2px solid #28B977;height:140px;border-radius:10px;" class="col-12 row">
                     <q-icon class="col-12 " color="positive" :name="categoria.icone"  style="font-size: 50px; " />
                     <span style="line-height: normal;padding:0px 2px 10px 2px ; " :class="categoria.nome.length > 17?'text-subtitle1 text-positive text-center text-weight-bold ':'text-h6 col-12 text-center text-positive'">{{categoria.nome}}</span>
                 </div>
@@ -124,7 +124,7 @@ export default {
   },
   mounted(){
       if(this.$route.params){
-          //console.log(this.$route.params);
+          //    console.log(this.$route.params);
           this.parametros = this.$route.params
       }
   }

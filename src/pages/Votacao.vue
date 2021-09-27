@@ -16,8 +16,8 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             label="Proposição Citada"
-            class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
+            class="full-width  text-white text-center bg-gradient"
+            style=" ;margin-top:15px; font-size:20px"
         >
         <div  class="row bg-white text-grey-9 text-left" style="font-size:16px">
           <div v-if="votacaoDetalhes['descUltimaAberturaVotacao'] || votacaoDetalhes['descricao'] " class="col-12 bg-yellow-3 text-center text-weight-bold">
@@ -73,8 +73,8 @@
         expand-icon="fas fa-chevron-right"
         expand-icon-class="text-white"
         label="Voto dos Deputados"
-        class="full-width  text-white text-center "
-        style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
+        class="full-width  text-white text-center bg-gradient"
+        style=" ;margin-top:15px; font-size:20px"
       >
         <div class="bg-white text-grey-9">
           <q-expansion-item
@@ -84,7 +84,7 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-grey-9"
             label="Deputados à favor"
-            class="full-width  text-grey-9 text-center "
+            class="full-width  text-grey-9 text-center bg-gradient"
             style="margin-top:15px; font-size:20px"
           >
             <q-list dense v-if="deputadosFavoraveis">
@@ -112,7 +112,7 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-grey-9"
             label="Deputados contra"
-            class="full-width  text-grey-9 text-center "
+            class="full-width  text-grey-9 text-center bg-gradient"
             style="margin-top:15px; font-size:20px"
         > 
          <q-input style="padding:6px" outlined v-model="nomeDeputadoVotoSim" label="Procure um candidato .." />
@@ -175,8 +175,8 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             label="Orientação dos Partidos"
-            class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
+            class="full-width  text-white text-center bg-gradient"
+            style=" ;margin-top:15px; font-size:20px"
         >
         <div class="bg-white text-grey-9">
           <q-expansion-item
@@ -186,7 +186,7 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-grey-9"
             label="Partidos à favor"
-            class="full-width  text-grey-9 text-center "
+            class="full-width  text-grey-9 text-center bg-gradient"
             style="margin-top:15px; font-size:20px"
           >
             <q-list dense v-if="partidosFavoraveis">
@@ -208,7 +208,7 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-grey-9"
             label="Partidos contra"
-            class="full-width  text-grey-9 text-center "
+            class="full-width  text-grey-9 text-center bg-gradient"
             style="margin-top:15px; font-size:20px"
         > 
          <q-list dense v-if="partidosContrarios">
@@ -230,7 +230,7 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-grey-9"
             label="Abstenções / Outros"
-            class="full-width  text-grey-9 text-center "
+            class="full-width  text-grey-9 text-center bg-gradient"
             style="margin-top:15px; font-size:20px"
         > 
             <q-list dense v-if="partidosAbstencao">
@@ -252,8 +252,8 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             label="Votação Popular"
-            class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px;margin-bottom:60px"
+            class="full-width  text-white text-center bg-gradient"
+            style=" ;margin-top:15px; font-size:20px;margin-bottom:60px"
         >
         <div class="bg-white text-grey-9">
           
