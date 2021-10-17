@@ -22,7 +22,7 @@
             </q-list>
             <br>
           <q-select outlined v-model="filtro_itens" :options="select_itens"  label="Itens por página"  /><br>
-            <div class="row justify-end">
+            <div class="row justify-end" style="padding-bottom:16px">
               <q-btn @click="pesquisaComFiltro" color="dark" label="Pesquisar" no-caps />
             </div>    
        </div>
@@ -419,10 +419,9 @@ export default {
    },
    salvarDeputadoFavoritos(index){
     //Salvar IDs para pesquisa rápida
-    //Salvar deputados para utilizar na página Favoritos (delimitar qtde?)
-        console.log(this.coracoesFavoritos[index] );
-        this.coracoesFavoritos[index]['situacao'] = !this.coracoesFavoritos[index]['situacao']
-        console.log(this.coracoesFavoritos[index] );
+    //Salvar deputados para utilizar na página Favoritos (delimitar qtde?)   
+    this.coracoesFavoritos[index]['situacao'] = !this.coracoesFavoritos[index]['situacao']
+      
        let deputado = this.deputados[index];
        let deputados = this.$q.localStorage.getItem('deputadosFavoritos');
        let ids = this.$q.localStorage.getItem('ID_deputadosFavoritos');

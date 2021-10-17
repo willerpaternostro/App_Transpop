@@ -7,7 +7,6 @@ const axiosInstance = axios.create({
   })
 
   const Axios = axios.create({
-    baseURL:'',
     timeout: 90000
   })
 

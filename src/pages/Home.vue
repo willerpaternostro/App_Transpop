@@ -14,7 +14,7 @@
                 label=" Votações Câmara Federal"
                 class="full-width  text-white text-center text-h6 bg-gradient"
             >
-            <q-list class="col-12 text-positive bg-white text-subtitle1">
+            <q-list class="col-12 text-primary bg-white text-subtitle1">
                 <q-item @click="clickVotacao(votacao)" v-for="(votacao,index) in statusProposicoes" :key="index" clickable v-ripple>
                     <q-item-section avatar>
                        <q-icon :color="votacao.iconeCor" :name="votacao.icone" />
@@ -24,7 +24,7 @@
                     </q-item-section>
 
                     <q-item-section side>
-                    <q-icon name="fas fa-chevron-right" color="positive" />
+                    <q-icon name="fas fa-chevron-right" color="primary" />
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -45,7 +45,7 @@
                 label="Proposições"
                 class="full-width text-white text-center text-h6 bg-gradient"
             >
-            <q-list class="col-12 text-positive bg-white text-subtitle1">
+            <q-list class="col-12 text-primary bg-white text-subtitle1">
                 <q-item v-for="proposicao in proposicoes" :key="proposicao.sigla" clickable v-ripple @click="clickProposicao(proposicao)">
                     <q-item-section avatar class="text-weight-bold">
                         {{proposicao.sigla}}
@@ -56,7 +56,7 @@
                     </q-item-section>
 
                     <q-item-section side>
-                    <q-icon name="fas fa-chevron-right" color="positive" />
+                    <q-icon name="fas fa-chevron-right" color="primary" />
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -77,7 +77,7 @@
                 label="Deputados"
                 class="full-width  text-white text-center text-h6 bg-gradient"
             >
-            <q-list class="col-12 text-positive bg-white text-subtitle1">
+            <q-list class="col-12 text-primary bg-white text-subtitle1">
                 <q-item @click="clickDeputados(deputado)" v-for="deputado in deputados" :key="deputado.atributo" clickable v-ripple>
                     <q-item-section avatar class="text-weight-bold">
                         {{deputado.icone}}
@@ -88,7 +88,7 @@
                     </q-item-section>
 
                     <q-item-section side>
-                    <q-icon name="fas fa-chevron-right" color="positive" />
+                    <q-icon name="fas fa-chevron-right" color="primary" />
                     </q-item-section>
                 </q-item>
                
@@ -236,6 +236,7 @@ export default {
   },
   mounted(){
       this.limparPesquisas()
+      console.log(this.usuarioLogado);
   }
    
 }

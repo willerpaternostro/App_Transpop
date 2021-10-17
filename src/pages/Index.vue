@@ -115,7 +115,7 @@ export default {
       }
       if(this.slide == 'slide3'){
         this.$q.localStorage.set('primeiraVezApp',true)
-        this.$router.push({name:'EscolhaCadastro'})
+        this.$router.push({name:'Login'})
       }
     },
     async iniciarDispositivo(){
@@ -167,14 +167,14 @@ export default {
     // Mexe apenas no localStorage.
     if(!this.$q.localStorage.getItem('primeiraVezApp')){ // Inicia variáveis do localStorage
       this.$q.localStorage.set('primeiraVezApp',false)
-      this.$q.localStorage.set('TelaEscolhaCadastro',false)
+      this.$q.localStorage.set('passou-tela-cadastro',false)
       this.$q.localStorage.set('deputadosFavoritos',[])
       this.$q.localStorage.set('ID_deputadosFavoritos',[])
       this.$q.localStorage.set('proposicoesFavoritos',[])
       this.$q.localStorage.set('ID_proposicoesFavoritos',[])
     }else{
-        if(!this.$q.localStorage.getItem('TelaEscolhaCadastro'))
-          this.$router.push({name:'EscolhaCadastro'})
+        if(!this.$q.localStorage.getItem('passou-tela-cadastro'))
+          this.$router.push({name:'Login'})
         else
           this.$router.push({name:'Home'})
     }

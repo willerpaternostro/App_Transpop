@@ -38,7 +38,7 @@
       >
         <q-tab @click="mudarTabFavoritos('deputados')" no-caps  name="deputados"   class="col-4 text-grey-7" label="Deputados" />
         <q-tab @click="mudarTabFavoritos('proposicoes')" no-caps  name="proposicoes"   class="col-4 text-grey-7" label="Proposições" /> 
-        <q-tab @click="mudarTabFavoritos('candidatos')" no-caps  name="candidatos"  class="col-4 text-grey-7" label="Candidatos" />
+        <q-tab @click="mudarTabFavoritos('candidatos')" no-caps  name="candidatos"  class="col-4 text-grey-7" label="Votações" />
       </q-tabs>
     </q-header>
  
@@ -130,6 +130,7 @@
          
         </q-item>
         <q-item
+          @click="logout"
           clickable
           v-ripple
         >
@@ -167,11 +168,10 @@
             indicator-color="grey-3"
         >
      
-        <q-tab style="max-width:20%" no-caps @click="paginaAtual != 'Home'?$router.push({name:'Home'}):''"  name="home" ><q-icon size="25px" name="fas fa-home"/><span class="text-grey-7 " style="font-size:12px">Home</span> </q-tab>
-        <q-tab style="max-width:20%" no-caps @click="paginaAtual != 'Favoritos'?$router.push({name:'FavoritosDeputados'}):''" name="favoritos" ><q-icon size="25px" name="fas fa-heart"/><span class="text-grey-7 " style="font-size:12px">Favoritos</span> </q-tab>
-        <q-tab style="max-width:20%" no-caps @click="paginaAtual != 'Favoritos'?$router.push({name:'TimeLine'}):''" name="timeline" ><q-icon size="25px" name="fas fa-bars"/><span class="text-grey-7 " style="font-size:12px">Timeline</span> </q-tab>
-        <q-tab disable style="max-width:20%" no-caps @click="paginaAtual != 'ListaCandidatos'?$router.push({name:'ListaCandidatos'}):''"  name="votos" ><q-icon size="25px" name="far fa-thumbs-up"/> <span class="text-grey-7 " style="font-size:12px">Votações</span></q-tab>
-        <q-tab disable style="max-width:20%" no-caps @click="paginaAtual != 'ListaCandidatos'?$router.push({name:'ListaCandidatos'}):''"  name="candidatos" ><q-icon size="25px" name="fas fa-users"/><span class="text-grey-7 " style="font-size:12px">Candidatos</span></q-tab>
+        <q-tab style="max-width:25%" no-caps @click="paginaAtual != 'Home'?$router.push({name:'Home'}):''"  name="home" ><q-icon size="25px" name="fas fa-home"/><span class="text-grey-7 " style="font-size:12px">Home</span> </q-tab>
+        <q-tab style="max-width:25%" no-caps @click="paginaAtual != 'Favoritos'?$router.push({name:'FavoritosDeputados'}):''" name="favoritos" ><q-icon size="25px" name="fas fa-heart"/><span class="text-grey-7 " style="font-size:12px">Favoritos</span> </q-tab>
+        <q-tab style="max-width:25%" no-caps @click="paginaAtual != 'Favoritos'?$router.push({name:'TimeLine'}):''" name="timeline" ><q-icon size="25px" name="fas fa-bars"/><span class="text-grey-7 " style="font-size:12px">Timeline</span> </q-tab>
+        <q-tab disable style="max-width:25%" no-caps @click="paginaAtual != 'ListaCandidatos'?$router.push({name:'ListaCandidatos'}):''"  name="candidatos" ><q-icon size="25px" name="fas fa-hand-holding-medical"/><span class="text-grey-7 " style="font-size:12px">Contribuir</span></q-tab>
       </q-tabs>
     </q-footer>
   </q-layout>
@@ -216,30 +216,12 @@ export default {
         this.mostrarHeader = false;
         this.mostrarFooter = false;
       }
-      if(this.paginaAtual == "Cadastro" ){
-        this.mostrarHeader = true;
+      
+      if(this.paginaAtual == "Login" ){
+        this.mostrarHeader = false;
         this.mostrarFooter = false;
-        this.inicializarHeader({
-            mostrarHeader:true,
-            mostrarBotaoDireitoHeader:true,
-            mostrarBotaoEsquerdoHeader:true,
-            iconeBotaoDireitoHeader:'fas fa-info',
-            iconeBotaoEsquerdoHeader:'fas fa-arrow-left',
-            tituloHeader:'Cadastro',
-        })
       }
-       if(this.paginaAtual == "EscolhaCadastro"){
-         this.mostrarHeader = true;
-        this.mostrarFooter = false;
-        this.inicializarHeader({
-            mostrarHeader:true,
-            mostrarBotaoDireitoHeader:true,
-            mostrarBotaoEsquerdoHeader:false,
-            iconeBotaoDireitoHeader:'fas fa-info',
-            iconeBotaoEsquerdoHeader:'fas fa-arrow-left',
-            tituloHeader:'Transpop',
-        })
-      }
+     
       if(this.paginaAtual == "Home"){
         this.mostrarFooter = true;
         this.inicializarHeader({
@@ -303,7 +285,7 @@ export default {
       this.mostrarDrawer = !this.mostrarDrawer
     },
     backButton(){
-      if(this.paginaAtual == "Cadastro"){this.$router.push({name:'EscolhaCadastro'})}
+      if(this.paginaAtual == "Cadastro"){this.$router.push({name:'Login'})}
       if(this.paginaAtual == "ListaCategoria"){this.$router.push({name:'Home'})}
       if(this.paginaAtual == "ListaProposicoes"){this.$router.push({name:'Home'})}
       if(this.paginaAtual == "ListaVotacoes"){this.$router.push({name:'Home'})}
@@ -406,6 +388,15 @@ export default {
         console.log(">>> CARREGOU SIZEEE");
         console.log(size);
       });
+    },
+    //Atualizar usuario
+    atualizarUsuario(dados){
+      return this.$store.commit('globais/atualizarUsuarioLogado',dados)
+    },
+    logout(){
+      this.atualizarUsuario(null)
+      this.$q.localStorage.set("permissao-tela-home",false)
+      this.$router.push({name:'Login'})
     }
   },
   watch:{

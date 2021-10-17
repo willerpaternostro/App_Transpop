@@ -1,5 +1,6 @@
 export default function () {
     return {
-        admobVisivel:false
+        admobVisivel:false,
+        usuarioLogado:null
     }
 }

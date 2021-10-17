@@ -5,9 +5,9 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue'), name:'Index' },
-      { path: 'escolha-cadastro', component: () => import('src/pages/EscolhaCadastro.vue'), name:'EscolhaCadastro' },
       { path: 'cadastro', component: () => import('src/pages/Cadastro.vue'), name:'Cadastro' },
       { path: 'login', component: () => import('src/pages/Login.vue'), name:'Login' },
+      { path: 'esqueci-senha', component: () => import('src/pages/EsqueciSenha.vue'), name:'EsqueciSenha' },
       { path: 'home', component: () => import('src/pages/Home.vue'), name:'Home' },
       { path: 'timeline', component: () => import('src/pages/TimeLine.vue'), name:'TimeLine' },
       

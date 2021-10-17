@@ -9,8 +9,8 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             :label="proposicao['descricaoTipo']"
-            class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
+            class="full-width  text-white text-center bg-gradient"
+            style="margin-top:15px; font-size:20px"
         >
         <div class="row bg-white text-grey-9 text-left" style="font-size:16px">
           <div class="col-12 "> 
@@ -64,39 +64,43 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             label="Tramitações"
-            class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px"
+            class="full-width  text-white text-center bg-gradient"
+            style="margin:15px 0px 80px; font-size:20px"
         >
         <div class="bg-white text-grey-9">
-          <div class="row " style="margin-top:10px;padding:10px">
-            <q-tree
-              :nodes="tramitacoes"
-              node-key="label"
-              accordion
-            >
-              <template v-slot:default-header="prop" >
-                <div class="row items-center">
-                  <div style="font-size:16px" class="text-weight-bold text-grey-9">{{ prop.node.label }}</div>
-                 
-                </div>
-              </template>
+          
+          <div class="row justify-center" style="margin-top:10px;padding:10px 0px 10px 0px">
+            
+              <q-tree
+                :nodes="tramitacoes"
+                node-key="label"
+                accordion
+              >
+                <template v-slot:default-header="prop" >
+                  <div class="row items-center">
+                    <div style="font-size:16px" class="text-weight-bold text-grey-9">{{ prop.node.label }}</div>
+                  
+                  </div>
+                </template>
 
-              <template v-slot:default-body="prop">
-                <div style="font-size:14px" v-if="prop.node.story">
-                 {{ prop.node.story }}
-                </div>
-                
-              </template>
-              <template v-slot:header-generic="prop">
-                <div class="row items-center">
-                 <q-btn v-if="prop.node.label"  @click="abrirLink(prop.node.label)" no-caps label="Ver na Íntegra" flat type="a"  :href="prop.node.label" color="orange" size="20px"  /> 
-                </div>
-              </template>
-            </q-tree>
+                <template v-slot:default-body="prop">
+                  <div style="font-size:14px" v-if="prop.node.story">
+                  {{ prop.node.story }}
+                  </div>
+                  
+                </template>
+                <template v-slot:header-generic="prop">
+                  <div class="row items-center">
+                  <q-btn v-if="prop.node.label"  @click="abrirLink(prop.node.label)" no-caps label="Ver na Íntegra" flat type="a"  :href="prop.node.label" color="orange" size="20px"  /> 
+                  </div>
+                </template>
+              </q-tree>
+              
           </div>
+          
         </div>
       </q-expansion-item> 
-      <!-- VOTAÇÃO POPULAR  -->
+      <!-- VOTAÇÃO POPULAR  
         <q-expansion-item
             default-opened
             expand-separator
@@ -105,8 +109,8 @@
             expand-icon="fas fa-chevron-right"
             expand-icon-class="text-white"
             label="Votação Popular"
-            class="full-width  text-white text-center "
-            style=" background-image: linear-gradient(to bottom right, green,yellow );margin-top:15px; font-size:20px;margin-bottom:60px"
+            class="full-width  text-white text-center bg-gradient"
+            style="margin-top:15px; font-size:20px;margin-bottom:60px"
         >
         <div class="bg-white text-grey-9">
           <div class="row " style="margin-top:10px;padding:10px">
@@ -128,7 +132,8 @@
           <div class="col-12"><span class="text-h6 ">Total:</span> <span style="font-size:20px;"> 200 votos</span> </div>
         </div>
         </div>
-      </q-expansion-item>
+        </q-expansion-item>
+      -->
     </q-page>
 </template>
 <script>

@@ -7,7 +7,7 @@
                 </div>
                <div class="col-6 row justify-end ">
             <!-- <q-btn flat round color="grey-9" icon="fas fa-share-alt" /> -->
-                <q-btn flat round color="red" icon="far fa-heart" />
+                <q-btn @click="atualizarDeputadoFavoritos" flat round color="red" :icon="favorito?'fas fa-heart':'far fa-heart'" />
             </div>
         
         </div>
@@ -149,7 +149,7 @@
             >
             
             <div >
-                <q-select @input="procurarDespesas" class="bg-white text-positive" outlined v-model="filtroDespesa_ano" :options="anosDespesas" label="Ano" />
+                <q-select behavior="menu" @input="procurarDespesas" class="bg-white text-positive" outlined v-model="filtroDespesa_ano" :options="anosDespesas" label="Ano" />
             </div>
             <div class="row bg-white">
                 <div class=" col-12 text-red text-h6 bg-white full-width" v-show="!loadingDespesas">
@@ -246,6 +246,7 @@ export default {
   data () {
     return {
         deputado:null,
+        favorito:false,
         profissoes:null,
         ocupacoes:null,
         despesas:null,
@@ -262,6 +263,11 @@ export default {
 
     }
   },
+    computed:{
+        usuarioLogado(){
+            return this.$store.state.globais.usuarioLogado
+        }
+    },
     methods:{
         resolve(){     
             Promise.allSettled([this.profissao(), this.procurarDespesas(), this.procurarOcupacoes()]).then((response) => {        
@@ -331,7 +337,6 @@ export default {
             this.despesas = todasDespesas
             this.loadingDespesas = false
         },
-
         async procurarOcupacoes(){
             const ocupacoes = await axiosInstance.get("deputados/"+this.deputado.id+"/ocupacoes",config)
             return ocupacoes
@@ -397,14 +402,60 @@ export default {
             }
             return resultado
         },
+        verificarCoracao(){
+            let deputadosFavoritos = this.$q.localStorage.getItem('ID_deputadosFavoritos');
+            deputadosFavoritos.forEach(element =>{
+                if(element == this.deputado.id){
+                    this.favorito = true;
+                }  
+            }) 
+        },
+        atualizarDeputadoFavoritos(){
+            console.log("ATUALIZAR DEPUTADOS FAVORITOS");
+            let deputadosFavoritosID = this.$q.localStorage.getItem('ID_deputadosFavoritos');
+            let deputados = this.$q.localStorage.getItem('deputadosFavoritos');
+            let posicao = null;
+
+            deputadosFavoritosID.forEach( (element,index) => {
+                if(element == this.deputado.id){
+                    posicao = index
+                }
+            })
+           console.log("POSICAO:"+posicao);
+            if(posicao >= 0 && posicao != null){ //Exclui favoritos
+                console.log("POSICAO IF SPLICE");
+                deputadosFavoritosID.splice(posicao,1)
+                deputados.splice(posicao,1)
+                this.$q.localStorage.set('ID_deputadosFavoritos',deputadosFavoritosID)
+                this.$q.localStorage.set('deputadosFavoritos',deputados)
+                this.favorito = false
+            }
+            if(posicao == null){ //Adiciona favoritos
+                deputadosFavoritosID.push(this.deputado.id)
+                deputados.push(this.deputado.ultimoStatus?this.deputado.ultimoStatus:this.deputado)
+                this.$q.localStorage.set('ID_deputadosFavoritos',deputadosFavoritosID)
+                this.$q.localStorage.set('deputadosFavoritos',deputados)
+                this.favorito = true
+                 this.salvarDeputadoBanco()
+            }
+            
+        },
+        salvarDeputadoBanco(){
+           /* let userId = '615a3c8368a2c4f22b83bb0d'
+            const res =  Axios.get("https://us-central1-transpop-9b36c.cloudfunctions.net/app/api/usuarios/inserir/deputado",
+            {params:{userId:userId, deputado: this.deputado}}).then(data =>{
+                console.log(data);
+            })*/
+        }
   },
   watch:{
 
   },
   beforeMount(){
-        console.log(this.$route.params);
+        //console.log(this.$route.params);
         if(this.$route.params){
             this.deputado = this.$route.params.deputado
+            this.verificarCoracao()
             this.procurarRedesSociais()
         }
   },
